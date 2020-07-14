@@ -12,6 +12,7 @@ build = "build.rs"
 
 [lib]
 name = "crypto"
+#crate-type = ["cdylib", "rlib"]
 
 [features]
 with-bench = []
@@ -24,3 +25,4 @@ libc = "^0.2"
 time = "^0.1"
 rand = "^0.3"
 #rustc-serialize = "^0.3" -- removed as it is not compatible with WebAssembly
+#wasm-bindgen = "0.2"

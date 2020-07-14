@@ -4,14 +4,14 @@
 // option. This file may not be copied, modified, or distributed
 // except according to those terms.
 
-#[cfg(any(target_arch = "x86", target_arch = "x86_64"))]
-use aesni;
+//#[cfg(any(target_arch = "x86", target_arch = "x86_64"))]
+//use aesni;
 
 use aessafe;
 use blockmodes::{PaddingProcessor, EcbEncryptor, EcbDecryptor, CbcEncryptor, CbcDecryptor, CtrMode,
     CtrModeX8};
 use symmetriccipher::{Encryptor, Decryptor, SynchronousStreamCipher};
-use util;
+//use util;
 
 /// AES key size
 #[derive(Clone, Copy)]
@@ -27,11 +27,13 @@ pub fn ecb_encryptor<X: PaddingProcessor + Send + 'static>(
         key_size: KeySize,
         key: &[u8],
         padding: X) -> Box<Encryptor> {
-    if util::supports_aesni() {
-        let aes_enc = aesni::AesNiEncryptor::new(key_size, key);
-        let enc = Box::new(EcbEncryptor::new(aes_enc, padding));
-        enc
-    } else {
+    //if //util::supports_aesni() {
+        //let aes_enc = aesni::AesNiEncryptor::new(key_size, key);
+        //let enc = Box::new(EcbEncryptor::new(aes_enc, padding));
+        //enc
+    //} 
+    //else 
+    {
         match key_size {
             KeySize::KeySize128 => {
                 let aes_enc = aessafe::AesSafe128Encryptor::new(key);
@@ -83,11 +85,12 @@ pub fn ecb_decryptor<X: PaddingProcessor + Send + 'static>(
         key_size: KeySize,
         key: &[u8],
         padding: X) -> Box<Decryptor> {
-    if util::supports_aesni() {
-        let aes_dec = aesni::AesNiDecryptor::new(key_size, key);
-        let dec = Box::new(EcbDecryptor::new(aes_dec, padding));
-        dec
-    } else {
+    // if util::supports_aesni() {
+    //     let aes_dec = aesni::AesNiDecryptor::new(key_size, key);
+    //     let dec = Box::new(EcbDecryptor::new(aes_dec, padding));
+    //     dec
+    // } else 
+    {
         match key_size {
             KeySize::KeySize128 => {
                 let aes_dec = aessafe::AesSafe128Decryptor::new(key);
@@ -140,11 +143,12 @@ pub fn cbc_encryptor<X: PaddingProcessor + Send + 'static>(
         key: &[u8],
         iv: &[u8],
         padding: X) -> Box<Encryptor + 'static> {
-    if util::supports_aesni() {
-        let aes_enc = aesni::AesNiEncryptor::new(key_size, key);
-        let enc = Box::new(CbcEncryptor::new(aes_enc, padding, iv.to_vec()));
-        enc
-    } else {
+    // if util::supports_aesni() {
+    //     let aes_enc = aesni::AesNiEncryptor::new(key_size, key);
+    //     let enc = Box::new(CbcEncryptor::new(aes_enc, padding, iv.to_vec()));
+    //     enc
+    // } else 
+    {
         match key_size {
             KeySize::KeySize128 => {
                 let aes_enc = aessafe::AesSafe128Encryptor::new(key);
@@ -198,11 +202,12 @@ pub fn cbc_decryptor<X: PaddingProcessor + Send + 'static>(
         key: &[u8],
         iv: &[u8],
         padding: X) -> Box<Decryptor + 'static> {
-    if util::supports_aesni() {
-        let aes_dec = aesni::AesNiDecryptor::new(key_size, key);
-        let dec = Box::new(CbcDecryptor::new(aes_dec, padding, iv.to_vec()));
-        dec
-    } else {
+    // if util::supports_aesni() {
+    //     let aes_dec = aesni::AesNiDecryptor::new(key_size, key);
+    //     let dec = Box::new(CbcDecryptor::new(aes_dec, padding, iv.to_vec()));
+    //     dec
+    // } else 
+    {
         match key_size {
             KeySize::KeySize128 => {
                 let aes_dec = aessafe::AesSafe128Decryptor::new(key);
@@ -255,11 +260,12 @@ pub fn ctr(
         key_size: KeySize,
         key: &[u8],
         iv: &[u8]) -> Box<SynchronousStreamCipher + 'static> {
-    if util::supports_aesni() {
-        let aes_dec = aesni::AesNiEncryptor::new(key_size, key);
-        let dec = Box::new(CtrMode::new(aes_dec, iv.to_vec()));
-        dec
-    } else {
+    // if util::supports_aesni() {
+    //     let aes_dec = aesni::AesNiEncryptor::new(key_size, key);
+    //     let dec = Box::new(CtrMode::new(aes_dec, iv.to_vec()));
+    //     dec
+    // } else 
+    {
         match key_size {
             KeySize::KeySize128 => {
                 let aes_dec = aessafe::AesSafe128EncryptorX8::new(key);
@@ -309,13 +315,13 @@ pub fn ctr(
 mod test {
     use std::iter::repeat;
 
-    #[cfg(any(target_arch = "x86", target_arch = "x86_64"))]
-    use aesni;
+    //#[cfg(any(target_arch = "x86", target_arch = "x86_64"))]
+    //use aesni;
 
     use aessafe;
     use symmetriccipher::{BlockEncryptor, BlockDecryptor, BlockEncryptorX8, BlockDecryptorX8,
             SynchronousStreamCipher};
-    use util;
+    //use util;
     use aes;
     use aes::KeySize::{KeySize128, KeySize192, KeySize256};
 
@@ -472,44 +478,44 @@ mod test {
         }
     }
 
-    #[cfg(any(target_arch = "x86", target_arch = "x86_64"))]
-    #[test]
-    fn test_aesni_128() {
-        if util::supports_aesni() {
-            let tests = tests128();
-            for t in tests.iter() {
-                let mut enc = aesni::AesNiEncryptor::new(KeySize128, &t.key[..]);
-                let mut dec = aesni::AesNiDecryptor::new(KeySize128, &t.key[..]);
-                run_test(&mut enc, &mut dec, t);
-            }
-        }
-    }
+    // #[cfg(any(target_arch = "x86", target_arch = "x86_64"))]
+    // #[test]
+    // fn test_aesni_128() {
+    //     if util::supports_aesni() {
+    //         let tests = tests128();
+    //         for t in tests.iter() {
+    //             let mut enc = aesni::AesNiEncryptor::new(KeySize128, &t.key[..]);
+    //             let mut dec = aesni::AesNiDecryptor::new(KeySize128, &t.key[..]);
+    //             run_test(&mut enc, &mut dec, t);
+    //         }
+    //     }
+    // }
 
-    #[cfg(any(target_arch = "x86", target_arch = "x86_64"))]
-    #[test]
-    fn test_aesni_192() {
-        if util::supports_aesni() {
-            let tests = tests192();
-            for t in tests.iter() {
-                let mut enc = aesni::AesNiEncryptor::new(KeySize192, &t.key[..]);
-                let mut dec = aesni::AesNiDecryptor::new(KeySize192, &t.key[..]);
-                run_test(&mut enc, &mut dec, t);
-            }
-        }
-    }
+    // #[cfg(any(target_arch = "x86", target_arch = "x86_64"))]
+    // #[test]
+    // fn test_aesni_192() {
+    //     if util::supports_aesni() {
+    //         let tests = tests192();
+    //         for t in tests.iter() {
+    //             let mut enc = aesni::AesNiEncryptor::new(KeySize192, &t.key[..]);
+    //             let mut dec = aesni::AesNiDecryptor::new(KeySize192, &t.key[..]);
+    //             run_test(&mut enc, &mut dec, t);
+    //         }
+    //     }
+    // }
 
-    #[cfg(any(target_arch = "x86", target_arch = "x86_64"))]
-    #[test]
-    fn test_aesni_256() {
-        if util::supports_aesni() {
-            let tests = tests256();
-            for t in tests.iter() {
-                let mut enc = aesni::AesNiEncryptor::new(KeySize256, &t.key[..]);
-                let mut dec = aesni::AesNiDecryptor::new(KeySize256, &t.key[..]);
-                run_test(&mut enc, &mut dec, t);
-            }
-        }
-    }
+    // #[cfg(any(target_arch = "x86", target_arch = "x86_64"))]
+    // #[test]
+    // fn test_aesni_256() {
+    //     if util::supports_aesni() {
+    //         let tests = tests256();
+    //         for t in tests.iter() {
+    //             let mut enc = aesni::AesNiEncryptor::new(KeySize256, &t.key[..]);
+    //             let mut dec = aesni::AesNiDecryptor::new(KeySize256, &t.key[..]);
+    //             run_test(&mut enc, &mut dec, t);
+    //         }
+    //     }
+    // }
 
     #[test]
     fn test_aessafe_128() {

@@ -7,7 +7,7 @@
 use aes::KeySize;
 use aes::KeySize::{KeySize128, KeySize192, KeySize256};
 use symmetriccipher::{BlockEncryptor, BlockDecryptor};
-use util::supports_aesni;
+//use util::supports_aesni;
 
 #[derive(Copy)]
 pub struct AesNiEncryptor {
