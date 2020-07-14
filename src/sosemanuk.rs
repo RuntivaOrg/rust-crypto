@@ -2331,7 +2331,7 @@ impl Decryptor for Sosemanuk {
 mod test {
     use sosemanuk::Sosemanuk;
     use symmetriccipher::SynchronousStreamCipher;
-    use serialize::hex::{FromHex};
+    use crate::hex::{FromHex};
 
     // Vectors from http://www.ecrypt.eu.org/stream/svn/viewcvs.cgi/ecrypt/trunk/submissions/sosemanuk/unverified.test-vectors?rev=108&view=markup
 

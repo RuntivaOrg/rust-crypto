@@ -459,7 +459,7 @@ impl Clone for Sha3 {
 mod tests {
     use digest::Digest;
     use sha3::{Sha3, Sha3Mode};
-    use serialize::hex::{FromHex, ToHex};
+    use crate::hex::{FromHex, ToHex};
 
     struct Test {
         input: &'static str,

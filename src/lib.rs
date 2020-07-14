@@ -7,13 +7,15 @@
 #![cfg_attr(feature = "with-bench", feature(test))]
 
 extern crate rand;
-extern crate rustc_serialize as serialize;
+//extern crate rustc_serialize as serialize;
 extern crate time;
 extern crate libc;
 
 #[cfg(all(test, feature = "with-bench"))]
 extern crate test;
 
+pub mod hex;
+pub mod base64;
 pub mod aead;
 pub mod aes;
 pub mod aes_gcm;

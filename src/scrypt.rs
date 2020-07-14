@@ -19,8 +19,8 @@ use std::mem::size_of;
 use cryptoutil::copy_memory;
 
 use rand::{OsRng, Rng};
-use serialize::base64;
-use serialize::base64::{FromBase64, ToBase64};
+use crate::base64;
+use crate::base64::{FromBase64, ToBase64};
 
 use cryptoutil::{read_u32_le, read_u32v_le, write_u32_le};
 use hmac::Hmac;

@@ -392,7 +392,7 @@ mod digest_tests {
     //use cryptoutil::test::test_digest_1million_random;
     use blake2b::Blake2b;
     use digest::Digest;
-    use serialize::hex::FromHex;
+    use crate::hex::FromHex;
 
 
     struct Test {
